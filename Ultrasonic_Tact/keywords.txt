@@ -1,0 +1,4 @@
+//Generates ARDUINO KEYWORDS for Ultrasonic_Tact class
+Ultrasonic_Tact	KEYWORD1
+begin	KEYWORD2
+tactvalues4u	KEYWORD2
