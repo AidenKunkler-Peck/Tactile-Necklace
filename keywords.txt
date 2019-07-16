@@ -5,3 +5,11 @@ sendVibration	KEYWORD2
 pulse	KEYWORD2
 circle	KEYWORD2
 scaler	KEYWORD2
+//Generates ARDUINO KEYWORDS for Ultrasonic_Tact class
+
+
+Ultrasonic_Tact	KEYWORD1
+ 
+begin	KEYWORD2
+tactvalues4u	KEYWORD2
+
