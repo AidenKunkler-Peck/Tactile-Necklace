@@ -13,3 +13,5 @@ If you are interested in the project, email us at:
 ajk6rzh@Virginia.edu
 
 jlam7@g.ucla.edu
+
+Current version as of 7/18/2019
