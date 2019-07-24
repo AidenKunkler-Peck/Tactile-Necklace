@@ -32,6 +32,7 @@ class AccelTact{
 		float newvalueGyroZ;//... z-axis
 		float zerox;//balance point for where the accelerometer is set in the x-axis (where no vibrators are on)
 		float zeroy;//... y-axis
+		float zeroz;
 		float avgx;//acquire from averaging the old and new values 
 		float avgy;//acquire from averaging the old and new values 
 		float accx=0; //accelerometer data is non integer values, with decimals
@@ -42,6 +43,7 @@ class AccelTact{
 		int16_t AccX,AccY,AccZ,GyroX,GyroY,GyroZ;
 		void getValues(); //get acc values
 		void average();//average acc values before getValues
+		void zero();//sets the sensor's axises equal to zero
 	public:
 		void begin (); //initializes the function, this can't be in the constructor
 		int getAccel (int axisNum); //gets the accelerometer values from the sensor

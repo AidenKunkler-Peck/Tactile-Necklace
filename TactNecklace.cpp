@@ -16,41 +16,6 @@
 void TactNecklace::begin(int* vPins, int numPins) {
   // put your setup code here, to run once:
   SoftPWMBegin();
-  Wire.begin();
-  Wire.beginTransmission(MPU6050_addr);
-  Wire.write(0x6B);
-  Wire.write(0);
-  Wire.endTransmission(true);
-  Serial.println(numPins);
-  this->numPins=numPins;
-  this->vPins=vPins;
-  for(int i=0; i<numPins; i++) {
-    pinMode((vPins[i]), OUTPUT);
-  }
-  getValues(); //get acc values
-  oldvalueAccelX = AccX;
-  oldvalueAccelY = AccY;
-  oldvalueAccelZ = AccZ;
-  oldvalueGyroX = GyroX;
-  oldvalueGyroY = GyroY;
-  oldvalueGyroZ = GyroZ;
-  for(int avg = 0;avg < NUMSAMPLES;avg++){
-    getValues();
-    newvalueAccelX = AccX;
-    newvalueAccelY = AccY;
-    newvalueAccelZ = AccZ;
-    newvalueGyroX = GyroX;
-    newvalueGyroY = GyroY;
-    newvalueGyroZ = GyroZ;
-    oldvalueAccelX = (oldvalueAccelX + newvalueAccelX)/2;
-    oldvalueAccelY = (oldvalueAccelY + newvalueAccelY)/2;
-    oldvalueAccelZ = (oldvalueAccelZ + newvalueAccelZ)/2;
-    oldvalueGyroX = (oldvalueGyroX + newvalueGyroX)/2;
-    oldvalueGyroY = (oldvalueGyroY + newvalueGyroY)/2;
-    oldvalueGyroZ = (oldvalueGyroZ + newvalueGyroZ)/2;
-  }
-  zerox=oldvalueAccelX;
-  zeroy=oldvalueAccelY;
   delay(500);
   Serial.print("Tactile Necklace Initialized");
 }

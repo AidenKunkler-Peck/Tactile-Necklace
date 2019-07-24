@@ -21,8 +21,7 @@ void AccelTact::begin() {
   Wire.endTransmission(true);
   getValues(); //get acc values
   average();
-  zerox=oldvalueAccelX;
-  zeroy=oldvalueAccelY;
+  zero();
   delay(500);
   Serial.println("Accelerometer Initialized");
 }
@@ -30,13 +29,13 @@ int AccelTact:: getAccel(int axisNum){ //gets the acceleration values from the s
   getValues(); //get acc values
   average();
   if (axisNum == 0){
-  	return AccX;
+  	return AccX-zerox;
   }
  else if (axisNum == 1){
- 	return AccY;
+ 	return AccY-zeroy;
  }
  else if(axisNum == 2){
- 	return AccZ;
+ 	return AccZ-zeroz;
  }
   }
 //Beginning communication with the accelerometer/gyroscopre Arduino "Wire.beginTransmission"
@@ -77,3 +76,11 @@ void AccelTact::average(){
     oldvalueGyroZ = (oldvalueGyroZ + newvalueGyroZ)/2;
   }
   }
+ //sets accel values equal to zero so that the orientation of the accelerometer sensor is perceived as being perpendicular to gravity
+void AccelTact::zero(){
+  zerox=oldvalueAccelX;
+  zeroy=oldvalueAccelY;
+  zeroz=oldvalueAccelZ;
+} 
+  
+ 
