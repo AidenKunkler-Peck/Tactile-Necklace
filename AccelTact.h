@@ -41,7 +41,7 @@ class AccelTact{
 	public:
 		void begin (); //initializes the function, this can't be in the constructor
 		int getAccel (); //gets the accelerometer values from the sensor
-		}
+		};
 #endif
 
  
