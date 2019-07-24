@@ -8,14 +8,19 @@
 //Including the libraries used in the code
 #include <AccelTact.h>
 //establishing Global Variables
-AccelTact myNecklace();
+AccelTact myNecklace;
 //runs once, gets the necklace ready
 void setup() {
   //<-- This symbol causes the computer to ignore the code to the right of it.
+  Serial.begin(9600);
   myNecklace.begin();//initializes communication with the Arduino
+  Serial.println("x\t\t y\t\t z\t\t");
 }
 //runs forever
 void loop() {
-  int accel=mynecklace.getAccel();
-  Serial.println(accel);
+ for(int i=0;i<3;i++){
+    Serial.print(myNecklace.getAccel(i));
+    Serial.print("\t\t");
+ }
+ Serial.println();
 }

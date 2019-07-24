@@ -20,34 +20,41 @@ void AccelTact::begin() {
   Wire.write(0);
   Wire.endTransmission(true);
   getValues(); //get acc values
-  oldvalueAccelX = AccX;
-  oldvalueAccelY = AccY;
-  oldvalueAccelZ = AccZ;
-  oldvalueGyroX = GyroX;
-  oldvalueGyroY = GyroY;
-  oldvalueGyroZ = GyroZ;
-  for(int avg = 0;avg < NUMSAMPLES;avg++){
-    getValues();
-    newvalueAccelX = AccX;
-    newvalueAccelY = AccY;
-    newvalueAccelZ = AccZ;
-    newvalueGyroX = GyroX;
-    newvalueGyroY = GyroY;
-    newvalueGyroZ = GyroZ;
-    oldvalueAccelX = (oldvalueAccelX + newvalueAccelX)/2;
-    oldvalueAccelY = (oldvalueAccelY + newvalueAccelY)/2;
-    oldvalueAccelZ = (oldvalueAccelZ + newvalueAccelZ)/2;
-    oldvalueGyroX = (oldvalueGyroX + newvalueGyroX)/2;
-    oldvalueGyroY = (oldvalueGyroY + newvalueGyroY)/2;
-    oldvalueGyroZ = (oldvalueGyroZ + newvalueGyroZ)/2;
-  }
+  average();
   zerox=oldvalueAccelX;
   zeroy=oldvalueAccelY;
   delay(500);
-  Serial.print("Accelerometer Initialized");
+  Serial.println("Accelerometer Initialized");
 }
-int AccelTact:: getAccel(){ //gets the acceleration values from the sensor
+int AccelTact:: getAccel(int axisNum){ //gets the acceleration values from the sensor
   getValues(); //get acc values
+  average();
+  if (axisNum == 0){
+  	return AccX;
+  }
+ else if (axisNum == 1){
+ 	return AccY;
+ }
+ else if(axisNum == 2){
+ 	return AccZ;
+ }
+  }
+//Beginning communication with the accelerometer/gyroscopre Arduino "Wire.beginTransmission"
+void AccelTact::getValues(){
+  Wire.beginTransmission(MPU6050_addr);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU6050_addr,14,true);  
+  AccX=Wire.read()<<8|Wire.read();
+  AccY=Wire.read()<<8|Wire.read();
+  AccZ=Wire.read()<<8|Wire.read();
+  GyroX=Wire.read()<<8|Wire.read();
+  GyroY=Wire.read()<<8|Wire.read();
+  GyroZ=Wire.read()<<8|Wire.read();
+}
+
+//averaging function that creates more reliable accel values to be returned in getValues
+void AccelTact::average(){
   oldvalueAccelX = AccX;//setting acquired AccX value to oldvalueAccelX to be used in averaging
   oldvalueAccelY = AccY;
   oldvalueAccelZ = AccZ;
@@ -70,16 +77,3 @@ int AccelTact:: getAccel(){ //gets the acceleration values from the sensor
     oldvalueGyroZ = (oldvalueGyroZ + newvalueGyroZ)/2;
   }
   }
-//Beginning communication with the accelerometer/gyroscopre Arduino "Wire.beginTransmission"
-void AccelTact::getValues(){
-  Wire.beginTransmission(MPU6050_addr);
-  Wire.write(0x3B);
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU6050_addr,14,true);  
-  AccX=Wire.read()<<8|Wire.read();
-  AccY=Wire.read()<<8|Wire.read();
-  AccZ=Wire.read()<<8|Wire.read();
-  GyroX=Wire.read()<<8|Wire.read();
-  GyroY=Wire.read()<<8|Wire.read();
-  GyroZ=Wire.read()<<8|Wire.read();
-}

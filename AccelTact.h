@@ -10,6 +10,9 @@
 #include<Wire.h>
 #include<Arduino.h>
 #ifndef AccelTact_h
+#define X 0
+#define Y 1
+#define Z 2
 #define AccelTact_h
 class AccelTact{
 	private:
@@ -38,9 +41,10 @@ class AccelTact{
 		const int MPU6050_addr=0x68;
 		int16_t AccX,AccY,AccZ,GyroX,GyroY,GyroZ;
 		void getValues(); //get acc values
+		void average();//average acc values before getValues
 	public:
 		void begin (); //initializes the function, this can't be in the constructor
-		int getAccel (); //gets the accelerometer values from the sensor
+		int getAccel (int axisNum); //gets the accelerometer values from the sensor
 		};
 #endif
 
