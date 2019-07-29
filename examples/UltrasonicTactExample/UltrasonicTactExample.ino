@@ -22,15 +22,4 @@ void loop() {
     // Prints the distance on the Serial Monitor and prints tact strength values
     Serial.print("Distance: ");
     Serial.println(distance);
-   tactArray = ultrasonicTact.tactvalues4u(distance);
-    Serial.print ("tact 1: ");
-    Serial.println(tactArray[0]);
-    Serial.print ("tact 2: ");
-    Serial.println(tactArray[1]);
-    Serial.print ("tact 3: ");
-    Serial.println(tactArray[2]);
-    Serial.print ("tact 4: ");
-    Serial.println(tactArray[3]);
-    delay(100);
-
 }

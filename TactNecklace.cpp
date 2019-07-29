@@ -97,35 +97,63 @@ void TactNecklace::getValues(){
   GyroY=Wire.read()<<8|Wire.read();
   GyroZ=Wire.read()<<8|Wire.read();
 }
-//Individual Vibraor Strength from 0-255
-void TactNecklace::clearTacts(int*  tactArray) {
-  for (int i=0; i<=numPins; i++) {
-      tactArray[i]=0;
-  }
-}
 //tactValues=acquiring the vibrator strength values from the accelerometer/gyroscope Arduino
-//tactArray=formula for converting Arduino acceleroemter/gyroscope values to output tactor strength values (each tactor has a seperate formula specific to the desired output of each vibrator relative to the orientation of the Arduino)
+//myValues=formula for converting Arduino acceleroemter/gyroscope values to output tactor strength values (each tactor has a seperate formula specific to the desired output of each vibrator relative to the orientation of the Arduino)
 //"if"/"else if"=if the conditions of the "if" function are met then the code within the function is carried out, if the conditions are not met the next "else if" function is evaluated
-void TactNecklace::tactValues(float accx, float accy, int* tactArray){
-  clearTacts(tactArray);
+void TactNecklace::tactValues(float accx, float accy, int* myValues){
+  clearTacts(myValues);
   if (accy<0 && accx>0){
-     tactArray[0]=((abs(accy)-zeroy)/64)+30;
-     tactArray[1]=sqrt(pow(accx-zerox,2)+pow(accy+zeroy,2))/64;
-     tactArray[2]=(accx-zerox)/64;  
+     myValues[0]=((abs(accy)-zeroy)/64)+30;
+     myValues[1]=sqrt(pow(accx-zerox,2)+pow(accy+zeroy,2))/64;
+     myValues[2]=(accx-zerox)/64;  
   }
   else if (accy<0 && accx<0){
-    tactArray[2]=(abs(accx)-zerox)/64;
-    tactArray[3]=sqrt(pow(accx+zerox,2)+pow(accy+zeroy,2))/64;
-    tactArray[4]=((abs(accy)-zeroy)/64)+30;
+    myValues[2]=(abs(accx)-zerox)/64;
+    myValues[3]=sqrt(pow(accx+zerox,2)+pow(accy+zeroy,2))/64;
+    myValues[4]=((abs(accy)-zeroy)/64)+30;
   }
   else if (accy>0 && accx<0){
-    tactArray[4]=(abs(accy-zeroy)/64)+30;
-    tactArray[5]=sqrt(pow(accx+zerox,2)+pow(accy-zeroy,2))/64;
-    tactArray[6]=(abs(accx)-zerox)/64;  
+    myValues[4]=(abs(accy-zeroy)/64)+30;
+    myValues[5]=sqrt(pow(accx+zerox,2)+pow(accy-zeroy,2))/64;
+    myValues[6]=(abs(accx)-zerox)/64;  
   }
   else if (accy>0 && accx>0){
-    tactArray[0]=((accy-zeroy)/64)+30;  
-    tactArray[6]=(abs(accx)-zerox)/64;
-    tactArray[7]=sqrt(pow(accx-zerox,2)+pow(accy-zeroy,2))/64;
+    myValues[0]=((accy-zeroy)/64)+30;  
+    myValues[6]=(abs(accx)-zerox)/64;
+    myValues[7]=sqrt(pow(accx-zerox,2)+pow(accy-zeroy,2))/64;
   }
 }
+//TODO: EXPLAIN WHAT METHOD DOES
+int* TactNecklace::tactvalues4u(int distance) {
+    clearTacts(myValues);
+    if (75 <= distance && distance <= 100) {
+      myValues[0] = ((9 * (100 - distance)) + 30);
+    
+    if (50 <= distance && distance <= 75) {
+      myValues[0]=255;
+      myValues[1] = (9 * (75 - distance) + 30);
+      myValues[2] = (9 * (75 - distance) + 30);
+    }
+    if (25 <= distance && distance <= 50) {
+      for (int i = 0; i < 3; i++) {
+      myValues[i] = 255;
+      }
+      myValues[3] = (9 * (50 - distance) + 30);
+    }
+    if (distance <= 25) {
+      for (int i = 0; i < 4; i++) {
+      myValues[i] = 255;
+      }
+    }
+	return myValues;
+	}
+}
+
+//TODO: EXPLAIN WHAT METHOD DOES
+void TactNecklace::clearTacts(int* myValues) {
+    for (int i = 0; i < 4; i++) {
+      myValues[i] = 0;
+    }
+
+}
+

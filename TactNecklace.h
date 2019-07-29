@@ -40,10 +40,10 @@ class TactNecklace{
 		const int vMax=255;//max strength of vibrator is 255, exceeding 255 with overflow, the byte will read the 8 rightmost bits
 		int numPins;
 		int myValues[8]; //defining a new array
-
+		//TODO: EXPLAIN WHAT METHOD DOES
+    	void clearTacts(int* tactArray);
 		const int MPU6050_addr=0x68;
 		int16_t AccX,AccY,AccZ,GyroX,GyroY,GyroZ;
-		void clearTacts(int*  tactArray) ;
 		void tactValues(float accx, float accy, int* tactArray);
 		void getValues(); //get acc values
 	public:
@@ -54,6 +54,8 @@ class TactNecklace{
 		//  needed to lower vibration strength even lower because voltage was increased from 5V to 7.4, so the new numbers are 69% of original numbers
 		//  can adjust the scaler, but not required
 		void sendVibration (); //acquires acceleration values and sends it to the vibrator pins which determines the strength of the vibration
+		//TODO: EXPLAIN WHAT METHOD DOES
+        int* tactvalues4u(int distance);
 };
 #endif
 

@@ -28,39 +28,6 @@ void UltrasonicTact::begin() {
 
 }
 
-//TODO: EXPLAIN WHAT METHOD DOES
-int* UltrasonicTact::tactvalues4u(int distance) {
-    clearTacts(tactArray);
-    if (75 <= distance && distance <= 100) {
-      tactArray[0] = ((9 * (100 - distance)) + 30);
-    }
-    if (50 <= distance && distance <= 75) {
-      tactArray[0]=255;
-      tactArray[1] = (9 * (75 - distance) + 30);
-      tactArray[2] = (9 * (75 - distance) + 30);
-    }
-    if (25 <= distance && distance <= 50) {
-      for (int i = 0; i < 3; i++) {
-      tactArray[i] = 255;
-      }
-      tactArray[3] = (9 * (50 - distance) + 30);
-    }
-    if (distance <= 25) {
-      for (int i = 0; i < 4; i++) {
-      tactArray[i] = 255;
-      }
-    }
-	return tactArray;
-}
-
-//TODO: EXPLAIN WHAT METHOD DOES
-void UltrasonicTact::clearTacts(int* tactArray) {
-    for (int i = 0; i < 4; i++) {
-      tactArray[i] = 0;
-    }
-
-}
-
 int UltrasonicTact::getDistance() {
      digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
