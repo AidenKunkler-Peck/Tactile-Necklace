@@ -16,8 +16,11 @@
 void TactNecklace::begin(int* vPins, int numPins) {
   // put your setup code here, to run once:
   SoftPWMBegin();
+  Serial.println(numPins);
   delay(500);
   Serial.print("Tactile Necklace Initialized");
+  this ->numPins=numPins;
+  this ->vPins=vPins;
 }
 //turns all vibrators on and then off to simulate a pulsation
 void TactNecklace::pulse (){
@@ -39,31 +42,10 @@ void TactNecklace::circle (){
   }
 }
 //acquires acceleration values and sends it to the vibrator pins which determines the strength of the vibration
-void TactNecklace::  sendVibration(){
-  getValues(); //get acc values
-  oldvalueAccelX = AccX;//setting acquired AccX value to oldvalueAccelX to be used in averaging
-  oldvalueAccelY = AccY;
-  oldvalueAccelZ = AccZ;
-  oldvalueGyroX = GyroX;
-  oldvalueGyroY = GyroY;
-  oldvalueGyroZ = GyroZ;
-  for(int avg = 0;avg < 50;avg++){//for loop for averaging (averaged 50 times)
-    getValues();//get values again and name them new values to be used in averaging 
-    newvalueAccelX = AccX;
-    newvalueAccelY = AccY;
-    newvalueAccelZ = AccZ;
-    newvalueGyroX = GyroX;
-    newvalueGyroY = GyroY;
-    newvalueGyroZ = GyroZ;
-    oldvalueAccelX = (oldvalueAccelX + newvalueAccelX)/2;//averaging old and new values to get a more accurate reading of the accelerometer and gyroscope data
-    oldvalueAccelY = (oldvalueAccelY + newvalueAccelY)/2;
-    oldvalueAccelZ = (oldvalueAccelZ + newvalueAccelZ)/2;
-    oldvalueGyroX = (oldvalueGyroX + newvalueGyroX)/2;
-    oldvalueGyroY = (oldvalueGyroY + newvalueGyroY)/2;
-    oldvalueGyroZ = (oldvalueGyroZ + newvalueGyroZ)/2;
-  }
-  tactValues(oldvalueAccelX,oldvalueAccelY, myValues);//sets accelerometer and gyroscope data to pins for vibrators
-  for (int i=0; i<=numPins; i++) {//sets each accelerometer value to the designated ping (1-8)
+void TactNecklace::  sendVibration(int accX, int accY){
+
+  tactValues(accX,accY, myValues);//sets accelerometer and gyroscope data to pins for vibrators
+  for (int i=0; i<=numPins; i++) {//sets each accelerometer value to the designated pin (1-8)
     SoftPWMSet(vPins[i], scaler(myValues[i]));
   }
 //for troubleshooting in the serial monitor
@@ -84,43 +66,31 @@ int TactNecklace::scaler(float input){
     return (50+(130*(input/255)));
   }
 }
-//Beginning communication with the accelerometer/gyroscopre Arduino "Wire.beginTransmission"
-void TactNecklace::getValues(){
-  Wire.beginTransmission(MPU6050_addr);
-  Wire.write(0x3B);
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU6050_addr,14,true);  
-  AccX=Wire.read()<<8|Wire.read();
-  AccY=Wire.read()<<8|Wire.read();
-  AccZ=Wire.read()<<8|Wire.read();
-  GyroX=Wire.read()<<8|Wire.read();
-  GyroY=Wire.read()<<8|Wire.read();
-  GyroZ=Wire.read()<<8|Wire.read();
-}
 //tactValues=acquiring the vibrator strength values from the accelerometer/gyroscope Arduino
 //myValues=formula for converting Arduino acceleroemter/gyroscope values to output tactor strength values (each tactor has a seperate formula specific to the desired output of each vibrator relative to the orientation of the Arduino)
 //"if"/"else if"=if the conditions of the "if" function are met then the code within the function is carried out, if the conditions are not met the next "else if" function is evaluated
-void TactNecklace::tactValues(float accx, float accy, int* myValues){
+void TactNecklace::tactValues(float accX, float accY, int* myValues){
   clearTacts(myValues);
-  if (accy<0 && accx>0){
-     myValues[0]=((abs(accy)-zeroy)/64)+30;
-     myValues[1]=sqrt(pow(accx-zerox,2)+pow(accy+zeroy,2))/64;
-     myValues[2]=(accx-zerox)/64;  
+  if (accY<0 && accX>0){
+     myValues[0]=(abs(accY)/64)+30;
+     myValues[1]=sqrt(pow(accX,2)+pow(accY,2))/64;
+     myValues[2]=(accX)/64;  
   }
-  else if (accy<0 && accx<0){
-    myValues[2]=(abs(accx)-zerox)/64;
-    myValues[3]=sqrt(pow(accx+zerox,2)+pow(accy+zeroy,2))/64;
-    myValues[4]=((abs(accy)-zeroy)/64)+30;
+  else if (accY<0 && accX<0){
+    myValues[2]=abs(accX)/64;
+    myValues[3]=sqrt(pow(accX,2)+pow(accY,2))/64;
+    myValues[3]=sqrt(pow(accX,2)+pow(accY,2))/64;
+    myValues[4]=abs(accY/64)+30;
   }
-  else if (accy>0 && accx<0){
-    myValues[4]=(abs(accy-zeroy)/64)+30;
-    myValues[5]=sqrt(pow(accx+zerox,2)+pow(accy-zeroy,2))/64;
-    myValues[6]=(abs(accx)-zerox)/64;  
+  else if (accY>0 && accX<0){
+    myValues[4]=(abs(accY)/64)+30;
+    myValues[5]=sqrt(pow(accX,2)+pow(accY,2))/64;
+    myValues[6]=abs(accX)/64;  
   }
-  else if (accy>0 && accx>0){
-    myValues[0]=((accy-zeroy)/64)+30;  
-    myValues[6]=(abs(accx)-zerox)/64;
-    myValues[7]=sqrt(pow(accx-zerox,2)+pow(accy-zeroy,2))/64;
+  else if (accY>0 && accX>0){
+    myValues[0]=(accY/64)+30;  
+    myValues[6]=abs(accX)/64;
+    myValues[7]=sqrt(pow(accX,2)+pow(accY,2))/64;
   }
 }
 //TODO: EXPLAIN WHAT METHOD DOES

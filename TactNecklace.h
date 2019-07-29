@@ -15,37 +15,13 @@
 #define ARRAY_SIZE(arr)((sizeof(arr))/sizeof(arr[0]))
 class TactNecklace{
 	private:
-		float oldvalue;//used later in averaging formula
-		float newvalue;//used later in averaging formula
-		float oldvalueAccelX;//used for averaging accelerometer values in the x-axis (oldvalue and new value averaged to get an approximate accelerometer value) 
-		float oldvalueAccelY;//... y-axis
-		float oldvalueAccelZ;//... z-axis
-		float oldvalueGyroX;//used for averaging gyroscope values in the x-axis (oldvalue and new value averaged to get an approximate gyroscope value) 
-		float oldvalueGyroY;//... y-axis
-		float oldvalueGyroZ;//... z-axis
-		float newvalueAccelX;//used for averaging accelerometer values in the x-axis (oldvalue and new value averaged to get an approximate accelerometer value) 
-		float newvalueAccelY;//... y-axis
-		float newvalueAccelZ;//... z-axis
-		float newvalueGyroX;//used for averaging gyroscope values in the x-axis (oldvalue and new value averaged to get an approximate gyroscope value) 
-		float newvalueGyroY;//... y-axis
-		float newvalueGyroZ;//... z-axis
-		float zerox;//balance point for where the accelerometer is set in the x-axis (where no vibrators are on)
-		float zeroy;//... y-axis
-		float avgx;//acquire from averaging the old and new values 
-		float avgy;//acquire from averaging the old and new values 
 		int* vPins;//establishes what ports from the Arduino to use
-		float accx=0; //accelerometer data is non integer values, with decimals
-		float accy=0; //data inputted from sensor has x and y axes
-		const int maxacc=16500;//Largest input value from accelerometer
 		const int vMax=255;//max strength of vibrator is 255, exceeding 255 with overflow, the byte will read the 8 rightmost bits
 		int numPins;
 		int myValues[8]; //defining a new array
 		//TODO: EXPLAIN WHAT METHOD DOES
     	void clearTacts(int* tactArray);
-		const int MPU6050_addr=0x68;
-		int16_t AccX,AccY,AccZ,GyroX,GyroY,GyroZ;
 		void tactValues(float accx, float accy, int* tactArray);
-		void getValues(); //get acc values
 	public:
 		void begin (int vpins[], int numPins); //initializes the function, this can't be in the constructor
 		void circle (); //turns on each tactor individually then turns that same tactor off so that the vibrators turn on in a circle
@@ -53,7 +29,7 @@ class TactNecklace{
 		int scaler(float input); //want your min to be 34 because it is at the point where it first starts to be noticeable, max is lower than 255 because that is the maximum vibration strength we deemed necessary
 		//  needed to lower vibration strength even lower because voltage was increased from 5V to 7.4, so the new numbers are 69% of original numbers
 		//  can adjust the scaler, but not required
-		void sendVibration (); //acquires acceleration values and sends it to the vibrator pins which determines the strength of the vibration
+		void sendVibration (int accX, int accY); //acquires acceleration values and sends it to the vibrator pins which determines the strength of the vibration
 		//TODO: EXPLAIN WHAT METHOD DOES
         int* tactvalues4u(int distance);
 };
