@@ -15,7 +15,6 @@ void setup(){
     }
     delay(10000);
 }
-  
 void loop (){
   val =digitalRead(sensorPin);
   Serial.println (val);
