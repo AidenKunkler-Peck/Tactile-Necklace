@@ -1,6 +1,6 @@
 int ledPin=11;
-int sensorPin=3;
-boolean val =0;
+int sensorPin=A0;
+int val =0;
 
 void setup(){
   pinMode(ledPin, OUTPUT);
@@ -11,10 +11,11 @@ void setup(){
 void loop (){
   val =digitalRead(sensorPin);
   Serial.println (val);
-  Serial.println(analogRead(A0));
   int volume=analogRead(A0);
+   Serial.println(volume);
+ 
   // when the sensor detects a signal above the threshold value, LED flashes
-  if (volume>16) {
+  if (volume>86) {
     digitalWrite(ledPin, HIGH);
     //Serial.println("High");
   }
